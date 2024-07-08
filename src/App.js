@@ -4,7 +4,7 @@ import Home from './views/Home';
 import Register from './views/Registro';
 import Restaurar from './views/Restaurar';
 import Inicio from './views/Inicio';
-
+import Mascotas from './views/Mascotas';
 
 import './assets/styles/App.css';
 
@@ -17,7 +17,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/restaurar" element={<Restaurar />} />
           <Route path="/inicio" element={<Inicio />} />
-
+          <Route path="/mascotas" element={<Mascotas />} />
 
         </Routes>
       </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../assets/styles/Inicio.css";
 
 export const Inicio = () => {
@@ -11,8 +12,9 @@ export const Inicio = () => {
           <div className="div">PetsGPS</div>
           <img className="thread" alt="Thread" src="mapa.png" />
           <div className="text-wrapper-2">Todas mis mascotas</div>
-          <img className="arrow" alt="Arrow" src="Arrow 2.png" />
-          <div className="parent-container">
+          <Link to="/mascotas">
+            <img className="arrow" alt="Arrow" src="Arrow 2.png" />
+          </Link>          <div className="parent-container">
           <div className="frame">
             <div className="frame-wrapper">
               <div className="frame-2">
