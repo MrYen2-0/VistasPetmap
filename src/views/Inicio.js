@@ -1,8 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../assets/styles/Inicio.css";
 
 export const Inicio = () => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) {
+      navigate('/');
+    }
+  },[navigate]);
+
   return (
     <div className="macbook-pro">
           <div className="overlap">

@@ -30,8 +30,11 @@ const Home = () => {
         'Content-Type': 'application/json'
       },
       data: { gmail, password }
+    }).catch((error) => {
+      console.error(`error en la consulta: ${error}`);
     });
     if (response && response.data.success) {
+      localStorage.setItem('token', response.token);
       navigate('/inicio');
     } else {
       Swal.fire({

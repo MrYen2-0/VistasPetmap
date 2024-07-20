@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "../assets/styles/Registro.css";
 import Blurrer from '../utils/blurrer';
-import { Checker } from '../utils/stuff';
+import { Checker } from '../utils/checker';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
