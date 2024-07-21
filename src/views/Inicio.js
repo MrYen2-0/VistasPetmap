@@ -1,17 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../assets/styles/Inicio.css";
+import { MascotaContainer } from "../components/MascotaContainer";
 
 export const Inicio = () => {
 
   const navigate = useNavigate();
+  const [mascotas, setMascotas] = useState([]);
+  const [selectedMascota, setSelectedMascota] = useState({ edad: -1, nombre: '' });
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) {
+    if(!sessionStorage.getItem('token')){
       navigate('/');
     }
-  },[navigate]);
+    setMascotas((prev) => [...prev, ...[
+      { edad: 3, nombre: "Kisha" },
+      { edad: 5, nombre: "pablo" }
+    ]]);
+  }, []);
+  
+  useEffect(() => {
+    setSelectedMascota(mascotas[0] ?? { edad: -1, nombre: '' });
+  },[mascotas]);
 
   return (
     <div className="macbook-pro">
@@ -27,17 +37,13 @@ export const Inicio = () => {
           </Link>          <div className="parent-container">
           <div className="frame">
             <div className="frame-wrapper">
-              <div className="frame-2">
-                <div className="text-wrapper-3">3 años</div>
-                <div className="text-wrapper-4">Kisha</div>
-              </div>
+              <MascotaContainer edad={selectedMascota.edad} nombre={selectedMascota.nombre} />
             </div>
             <div className="text-wrapper-5">Mis mascotas</div>
             <div className="div-wrapper">
-              <div className="frame-2">
-                <div className="text-wrapper-3">3 años</div>
-                <div className="text-wrapper-4">Kirby</div>
-              </div>
+            {mascotas.map((mascota, index) => (
+                <MascotaContainer edad={mascota.edad} nombre={mascota.nombre} />
+              ))}
             </div>
             <div className="livescreen-overflow">
               <img className="vector" alt="Vector" src="temp.png" />

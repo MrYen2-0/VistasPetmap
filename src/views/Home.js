@@ -34,7 +34,7 @@ const Home = () => {
       console.error(`error en la consulta: ${error}`);
     });
     if (response && response.data.success) {
-      localStorage.setItem('token', response.token);
+      sessionStorage.setItem('token', response.token);
       navigate('/inicio');
     } else {
       Swal.fire({
