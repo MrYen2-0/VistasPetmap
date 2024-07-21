@@ -1,7 +1,12 @@
 import React from "react";
 import "../assets/styles/Mascotas.css";
+import { Link } from "react-router-dom";
 
 export const Mascotas = () => {
+  const goBack = () => {
+    window.history.back();
+  };
+
   return (
     <div className="temp-screen">
       <div className="div">
@@ -9,10 +14,10 @@ export const Mascotas = () => {
           <div className="rectangle" />
           <div className="text-wrapper">PetMaps</div>
           <img className="vector" alt="Vector" src="vector.png" />
-          <img className="img" alt="Vector" src="vector.png" />
         </div>
-        <img className="group" alt="Group" src="Group 6.png" />
-        <div className="frame">
+        <Link to="/agregarmas">
+          <img className="group" alt="Group" src="Group 6.png" />
+        </Link>        <div className="frame">
           <div className="text-wrapper-2">1 año</div>
           <div className="text-wrapper-3">Kirby</div>
         </div>
@@ -25,8 +30,9 @@ export const Mascotas = () => {
           <div className="text-wrapper-2">2 año</div>
           <div className="text-wrapper-3">Kirara</div>
         </div>
+        <img className="vector-3" alt="Vector" src="Vector.png" />
         <div className="text-wrapper-4">Todas mis mascotas</div>
-        <div className="arrows">
+        <div className="arrows" onClick={goBack}>
           <div className="overlap-group">
             <img className="line" alt="Line" src="line 1.png" />
             <img className="line-2" alt="Line" src="line 2.png" />
