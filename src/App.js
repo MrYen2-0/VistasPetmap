@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './views/Home';
 import Register from './views/Registro';
@@ -10,6 +10,19 @@ import Agregarmas from './views/Agregarmas';
 import './assets/styles/App.css';
 
 function App() {
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.removeItem('token');
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
+  },[]);
+
   return (
     <Router>
       <div className="App">
