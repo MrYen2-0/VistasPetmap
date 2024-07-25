@@ -54,7 +54,7 @@ const VerDatosPerro = () => {
                     return error.response ?? null;
                 });
 
-                if ((!response || response.statusCode !== 200) || !response.data) {
+                if ((!response || response.status !== 200) || !response.data) {
                     console.error('error al establecer el puente de datos');
                     return;
                 }

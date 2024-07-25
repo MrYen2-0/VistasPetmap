@@ -12,9 +12,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png'
 });
 
-const position = [16.629667, -93.099116];
-
-export default function LeafletMap() {
+export default function LeafletMap({ position = [16.629667, -93.099116] }) {
   return (
     <MapContainer center={position} zoom={13} style={{ height: '400px', width: '100%' }}>
       <TileLayer

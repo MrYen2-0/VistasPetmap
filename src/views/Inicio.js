@@ -18,12 +18,15 @@ export const Inicio = () => {
       navigate("/");
     }
     async function fetchMascotas() {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/perros/map`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': sessionStorage.getItem('token')
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/perros/map`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: sessionStorage.getItem("token"),
+          },
         }
-      });
+      );
       if (response && response.data) {
         const data = response.data.data;
         setMascotas(data);
@@ -41,86 +44,96 @@ export const Inicio = () => {
   }
 
   const [ws, setWS] = useState(null);
-    const [temperatura, setTemperatura] = useState(Number());
-    const [ritmoCardiaco, setRitmoCardiaco] = useState(Number());
-    //para poner una fecha en español: Date().toLocaleDateString() con las opciones: "es-ES" y un json con las opciones
-    const [fechaDeRegistro, setFechaDeRegistro] = useState(new Date().toLocaleDateString("es-ES", {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: '2-digit'
-    }));
+  const [temperatura, setTemperatura] = useState(Number());
+  const [ritmoCardiaco, setRitmoCardiaco] = useState(Number());
+  const [position, setPosition] = useState([]);
+  //para poner una fecha en español: Date().toLocaleDateString() con las opciones: "es-ES" y un json con las opciones
+  const [fechaDeRegistro, setFechaDeRegistro] = useState(
+    new Date().toLocaleDateString("es-ES", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "2-digit",
+    })
+  );
 
-    function goBack() {
-        navigate('/inicio');
+  function goBack() {
+    navigate("/inicio");
+  }
+
+  useEffect(function () {
+    function connectToWS() {
+      const ws = new WebSocket(process.env.REACT_APP_WS_URL);
+
+      ws.onopen = async function () {
+        setWS(ws);
+      };
+
+      ws.onmessage = function (event) {
+        const data = event.data;
+        switch (data.eventName) {
+          case "SensorData":
+            setFechaDeRegistro(data.fechaRegistro);
+            setRitmoCardiaco(data.latidosPorMinuto);
+            setTemperatura(data.temperatura);
+            setPosition([data.latitud, data.longitud]);
+            break;
+
+          default:
+            return;
+        }
+      };
+
+      ws.onclose = function (event) {
+        console.log(event.reason);
+        console.log("intentando reconectar en 5 segundos...");
+        setTimeout(() => connectToWS(), 5000);
+      };
+
+      ws.onerror = function (event) {
+        console.log(event);
+        ws.close();
+      };
     }
 
-    useEffect(function () {
-        function connectToWS() {
-            const ws = new WebSocket(process.env.REACT_APP_WS_URL);
-    
-            ws.onopen = async function () {
-                setWS(ws);
+    connectToWS();
 
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/usuarios/accessToken/values`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'authorization': sessionStorage.getItem('token')
-                    }
-                }).catch((error) => {
-                    console.error(error.message);
-                    return error.response ?? null;
-                });
+    return () => {
+      if (ws && ws.readyState) {
+        ws.close();
+      }
+    };
+  }, []);
 
-                if ((!response || response.statusCode !== 200) || !response.data) {
-                    console.error('error al establecer el puente de datos');
-                    return;
-                }
+  async function setChecker(idPerro) {
+    const response = await axios
+      .get(`${process.env.REACT_APP_API_URL}/usuarios/accessToken/values`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: sessionStorage.getItem("token"),
+        },
+      })
+      .catch((error) => {
+        console.error(error.message);
+        return error.response ?? null;
+      });
 
-                ws.send(JSON.stringify({
-                    eventName: 'setBridge',
-                    idPerro: mascotas.find(m => m.idDueño === response.data._id).idDueño,
-                    idUsuario: response.data._id   
-                }));
-            }
+    if (!response || response.statusCode !== 200 || !response.data) {
+      console.error("error al establecer el puente de datos");
+      return;
+    }
 
-            ws.onmessage = function (event) {
-                const data = event.data;
-                switch (data.eventName) {
-                    case "SensorData":
-                        setFechaDeRegistro(data.fechaRegistro);
-                        setRitmoCardiaco(data.latidosPorMinuto);
-                        setTemperatura(data.temperatura);
-                        break;
-                    
-                    default:
-                        return;
-                }
-            }
-    
-            ws.onclose = function (event) {
-                console.log(event.reason);
-                console.log("intentando reconectar en 5 segundos...");
-                setTimeout(() => connectToWS(), 5000);
-            }
-
-            ws.onerror = function (event) {
-                console.log(event);
-                ws.close();
-            }
-        }
-
-        connectToWS();
-
-        return () => {
-            if (ws && ws.readyState) {
-                ws.close();
-            }
-        }
-    },[]);
+    ws.send(
+      JSON.stringify({
+        eventName: "setBridge",
+        idPerro,
+        idUsuario: response.data._id,
+      })
+    );
+  }
 
   return (
     <div className="macbook-pro">
@@ -129,7 +142,9 @@ export const Inicio = () => {
         <div className="text-wrapper">PetMaps</div>
       </div>
       <div className="div">PetsGPS</div>
-      <div className="thread"><LeafletMap /></div>
+      <div className="thread">
+        <LeafletMap position={position}/>
+      </div>
       <div className="text-wrapper-2">Todas mis mascotas</div>
       <Link to="/mascotas">
         <img className="arrow" alt="Arrow" src="Arrow 2.png" />
@@ -137,15 +152,17 @@ export const Inicio = () => {
       <div className="parent-container">
         <div className="frame">
           <div className="frame-wrapper">
-          {mascotas.map((mascota, index) => (
-            <MascotaContainer edad={mascota.fechaNacimiento} nombre={mascota.nombre}
-            goToInfo={() => gotToInfoPage(mascota._id, mascota.nombre)}/>
-          ))}
+            {mascotas.map((mascota, index) => (
+              <MascotaContainer
+                edad={mascota.fechaNacimiento}
+                nombre={mascota.nombre}
+                goToInfo={() => gotToInfoPage(mascota._id, mascota.nombre)}
+                setChecker={() => setChecker(mascota._id)}
+              />
+            ))}
           </div>
           <div className="text-wrapper-5">Mis mascotas</div>
-          <div className="div-wrapper">
-            
-          </div>
+          <div className="div-wrapper"></div>
           <div className="livescreen-overflow">
             <img className="vector" alt="Vector" src="temp.png" />
             <div className="ellipse" />
