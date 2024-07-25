@@ -1,10 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/styles/Mascotas.css";
 import { Link } from "react-router-dom";
 
 export const Mascotas = () => {
+
+  const navigate = useNavigate();
+
   const goBack = () => {
-    window.history.back();
+    navigate('/inicio');
   };
 
   return (

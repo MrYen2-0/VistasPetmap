@@ -6,6 +6,7 @@ import Restaurar from './views/Restaurar';
 import Inicio from './views/Inicio';
 import Mascotas from './views/Mascotas';
 import Agregarmas from './views/Agregarmas';
+import VerDatosPerro from './views/VerDatosPerro';
 
 import './assets/styles/App.css';
 
@@ -20,7 +21,7 @@ function App() {
           <Route path="/inicio" element={<Inicio />} />
           <Route path="/mascotas" element={<Mascotas />} />
           <Route path="/agregarmas" element={<Agregarmas />} />
-
+          <Route path="/verDatosPerro" element={<VerDatosPerro />}/>
         </Routes>
       </div>
     </Router>
