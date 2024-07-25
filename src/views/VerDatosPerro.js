@@ -17,10 +17,9 @@ const VerDatosPerro = () => {
     }
     const query = useQuery();
     const idPerro = query.get('idPerro');
+    const nombrePerro = query.get('nombrePerro');
     
     const [ws, setWS] = useState(null);
-    
-    const [nombrePerro, setNombrePerro] = useState(String("nombrePerro"));
     const [temperatura, setTemperatura] = useState(Number());
     const [ritmoCardiaco, setRitmoCardiaco] = useState(Number());
     //para poner una fecha en español: Date().toLocaleDateString() con las opciones: "es-ES" y un json con las opciones
@@ -65,6 +64,20 @@ const VerDatosPerro = () => {
                     idPerro: idPerro,
                     idUsuario: response.data._id   
                 }));
+            }
+
+            ws.onmessage = function (event) {
+                const data = event.data;
+                switch (data.eventName) {
+                    case "SensorData":
+                        setFechaDeRegistro(data.fechaRegistro);
+                        setRitmoCardiaco(data.latidosPorMinuto);
+                        setTemperatura(data.temperatura);
+                        break;
+                    
+                    default:
+                        return;
+                }
             }
     
             ws.onclose = function (event) {
