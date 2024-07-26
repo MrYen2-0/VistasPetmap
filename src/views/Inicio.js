@@ -164,11 +164,6 @@ export const Inicio = () => {
           <div className="text-wrapper-5">Mis mascotas</div>
           <div className="div-wrapper"></div>
           <div className="livescreen-overflow">
-            <img className="vector" alt="Vector" src="temp.png" />
-            <div className="ellipse" />
-            <div className="text-wrapper-6">{temperatura}</div>
-            <div className="text-wrapper-7">°C</div>
-            <div className="text-wrapper-8">Temperatura de *nombre*</div>
           </div>
         </div>
       </div>

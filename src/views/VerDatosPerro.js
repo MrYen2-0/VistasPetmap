@@ -67,7 +67,7 @@ const VerDatosPerro = () => {
             }
 
             ws.onmessage = function (event) {
-                const data = event.data;
+                const data = JSON.parse(event.data);
                 switch (data.eventName) {
                     case "SensorData":
                         setFechaDeRegistro(data.fechaRegistro);
