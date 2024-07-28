@@ -31,7 +31,7 @@ const Google = () => {
   const position = [latitud, longitud];
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
+    const socket = new WebSocket(process.env.REACT_APP_WS_URL);
     setWs(socket);
 
     socket.onopen = () => {
